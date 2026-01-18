@@ -62,13 +62,17 @@ function App() {
         
         {artists.length > 0 && (
           <div className="mt-8 text-center">
-            <button
-              onClick={handleGetRecommendations}
-              disabled={loading}
-              className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-colors"
-            >
-              {loading ? 'Finding recommendations...' : 'Get Recommendations'}
-            </button>
+           <button
+  onClick={handleGetRecommendations}
+  disabled={loading || artists.length === 0}
+  className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-colors"
+>
+  {loading ? 'Analyzing soundscapes...' : 'Get Recommendations'}
+</button>
+
+{loading && (
+  <p className="mt-4 text-slate-300">AI is generating recommendations, please wait...</p>
+)}
           </div>
         )}
 
