@@ -3,7 +3,7 @@ import ArtistInput from './components/ArtistInput';
 import RecommendationCard from './components/RecommendationCard';
 import { getRecommendations } from './services/geminiService';
 import type { Artist, Recommendation } from './types';
-import TestAI from './components/TestAI';
+
 
 function App() {
   const [artists, setArtists] = useState<Artist[]>([]);
