@@ -25,21 +25,22 @@ function App() {
   };
 
   const handleGetRecommendations = async () => {
-    if (artists.length === 0) return;
-    
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await getRecommendations(artists);
-      setRecommendations(response.recommendations);
-    } catch (err) {
-      setError('Failed to get recommendations. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (artists.length === 0) return;
+
+  setLoading(true);
+  setError(null);
+  setRecommendations([]); // Clear previous recommendations immediately
+
+  try {
+    const response = await getRecommendations(artists);
+    setRecommendations(response.recommendations);
+  } catch (err) {
+    setError('Failed to get recommendations. Please try again.');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-8">
