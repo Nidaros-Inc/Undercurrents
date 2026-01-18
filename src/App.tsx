@@ -59,9 +59,6 @@ function App() {
           onRemove={handleRemoveArtist}
           maxArtists={MAX_ARTISTS}
         />
-
-
-        <TestAI />
         
         {artists.length > 0 && (
           <div className="mt-8 text-center">
