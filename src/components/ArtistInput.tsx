@@ -50,13 +50,14 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
       "
     />
 
-    {/* '+' button as a separate square */}
+    {/* '+' button as a slightly smaller square with outline */}
     <button
       onClick={handleAdd}
       className="
-        w-16 h-16
+        w-12 h-12
         ml-2
-        bg-slate-500
+        bg-slate-600
+        border border-slate-400
         rounded-lg
         text-white text-xl font-bold
         flex items-center justify-center
