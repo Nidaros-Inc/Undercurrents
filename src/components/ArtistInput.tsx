@@ -19,9 +19,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
   };
 
   return (
-    <div className="space-y-4">
-      {/* Input and Add Button */}
-      <div className="flex gap-4">
+
       <div className="relative flex items-center w-2/3 mx-auto mt-6">
   <input
     type="text"
