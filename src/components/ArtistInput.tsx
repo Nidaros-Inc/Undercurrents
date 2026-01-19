@@ -30,7 +30,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
                   group-hover:opacity-20
                   group-focus-within:opacity-25"></div>
 
-  {/* Input + button wrapper */}
+  {/* Input + button wrapper with uniform padding */}
   <div className="flex w-full items-center relative rounded-xl overflow-hidden border border-slate-600 bg-[#1c1c28] p-2">
     {/* Input box */}
     <input
@@ -50,12 +50,12 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
       "
     />
 
-    {/* '+' button with uniform surrounding gaps */}
+    {/* '+' button with equal top, bottom, right spacing */}
     <button
       onClick={handleAdd}
       className="
         w-12 h-12
-        -mr-2
+        mr-2
         bg-slate-700
         border border-slate-500
         rounded-lg
