@@ -86,3 +86,5 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
     ))}
   </div>
 </div>
+    );
+}
