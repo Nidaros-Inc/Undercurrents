@@ -43,7 +43,7 @@ function App() {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#081428] via-[#081428] to-[#110f2d] text-slate-300 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1830] via-[#0a1830]  to-[#18135a] -slate-300 p-8">
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-14">
  <h1 className="text-6xl font-extrabold tracking-tight mb-4 text-white">
