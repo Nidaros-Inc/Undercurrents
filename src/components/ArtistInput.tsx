@@ -31,42 +31,53 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
                     group-focus-within:opacity-25"></div>
 
     {/* Input + button wrapper */}
-    <div className="flex w-full relative">
-      <input
-        type="text"
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder="Type an artist you love..."
-        className="
-          flex-1
-          h-16
-          rounded-xl
-          bg-[#1c1c28]
-          border border-slate-400
-          text-slate-300
-          placeholder:text-slate-400
-          pl-4
-          transition-all duration-200
-          focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-40
-        "
-      />
-      <button
-        onClick={handleAdd}
-        className="
-          w-14 h-14
-          -ml-14
-          bg-transparent border border-slate-400
-          rounded-xl
-          text-white text-xl font-bold
-          flex items-center justify-center
-          hover:bg-purple-700 hover:bg-opacity-20
-          transition-all duration-200
-        "
-      >
-        +
-      </button>
-    </div>
+   <div className="relative flex items-center w-2/3 group">
+  {/* Glow container */}
+  <div className="absolute inset-0 rounded-xl pointer-events-none
+                  bg-purple-700/10
+                  blur-lg
+                  opacity-0
+                  transition-opacity duration-500
+                  group-hover:opacity-20
+                  group-focus-within:opacity-25"></div>
+
+  {/* Input + '+' button wrapper */}
+  <div className="flex w-full items-center relative">
+    <input
+      type="text"
+      value={input}
+      onChange={e => setInput(e.target.value)}
+      placeholder="Type an artist you love..."
+      className="
+        flex-1
+        h-16
+        rounded-xl
+        bg-[#1c1c28]
+        border border-slate-400
+        text-slate-300
+        placeholder:text-slate-400
+        pl-4
+        transition-all duration-200
+        focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-40
+      "
+    />
+    <button
+      onClick={handleAdd}
+      className="
+        w-14 h-14
+        ml-2
+        bg-transparent border border-slate-400
+        rounded-xl
+        text-white text-xl font-bold
+        flex items-center justify-center
+        hover:bg-purple-700 hover:bg-opacity-20
+        transition-all duration-200
+      "
+    >
+      +
+    </button>
   </div>
+</div>
 
   {/* List of added artists */}
   <div className="flex flex-wrap gap-2 w-2/3">
