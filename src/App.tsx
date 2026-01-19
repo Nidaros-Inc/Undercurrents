@@ -43,13 +43,13 @@ function App() {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-8">
+    <div className="min-h-screen bg-[#0b1020] text-slate-300 p-8">
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-14">
-  <h1 className="text-6xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+ <h1 className="text-6xl font-extrabold tracking-tight mb-4 text-white">
     Undercurrents
   </h1>
-  <p className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto">
+  <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
     Discover hidden indie music gems tailored to your taste
   </p>
 </header>
@@ -85,7 +85,7 @@ function App() {
 
         {recommendations.length > 0 && (
           <div className="mt-12 space-y-6">
-            <h2 className="text-3xl font-bold text-center mb-8">
+            <h2 className="text-3xl font-semibold tracking-tight text-center mb-10 text-slate-200">
               Your Personalized Recommendations
             </h2>
             {recommendations.map((rec, index) => (
