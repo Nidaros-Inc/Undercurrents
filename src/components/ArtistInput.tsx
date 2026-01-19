@@ -20,6 +20,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
   return (
     <div className="flex flex-col gap-4 items-center">
      {/* Input + '+' button container */}
+{/* Input + '+' button container */}
 <div className="relative flex items-center w-2/3 group">
   {/* Glow container */}
   <div className="absolute inset-0 rounded-xl pointer-events-none
@@ -50,13 +51,13 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
       "
     />
 
-    {/* '+' button as a smaller square with equal gaps */}
+    {/* '+' button as a smaller square, slightly inset, darker grey */}
     <button
       onClick={handleAdd}
       className="
         w-12 h-12
-        ml-2
-        bg-slate-700
+        -mr-1
+        bg-slate-800
         border border-slate-400
         rounded-lg
         text-white text-xl font-bold
