@@ -30,8 +30,8 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
                   group-hover:opacity-20
                   group-focus-within:opacity-25"></div>
 
-  {/* Input + '+' wrapper */}
-  <div className="flex w-full items-center relative rounded-xl overflow-hidden border border-slate-400">
+  {/* Input + button wrapper */}
+  <div className="flex w-full items-center relative rounded-xl overflow-hidden border border-slate-400 bg-[#1c1c28]">
     {/* Input box */}
     <input
       type="text"
@@ -41,26 +41,26 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
       className="
         flex-1
         h-16
-        bg-[#1c1c28]
+        bg-transparent
         text-slate-300
         placeholder:text-slate-400
         pl-4
-        pr-4
         transition-all duration-200
         focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-40
       "
     />
 
-    {/* '+' button */}
+    {/* '+' button as a separate square */}
     <button
       onClick={handleAdd}
       className="
-        w-14 h-16
-        bg-transparent
-        border-l border-slate-400
+        w-16 h-16
+        ml-2
+        bg-slate-500
+        rounded-lg
         text-white text-xl font-bold
         flex items-center justify-center
-        hover:bg-purple-700 hover:bg-opacity-20
+        hover:bg-purple-700 hover:bg-opacity-30
         transition-all duration-200
       "
     >
