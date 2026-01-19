@@ -45,14 +45,14 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-            Undercurrents
-          </h1>
-          <p className="text-xl text-slate-300">
-            Discover hidden indie music gems tailored to your taste
-          </p>
-        </header>
+        <header className="text-center mb-14">
+  <h1 className="text-6xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+    Undercurrents
+  </h1>
+  <p className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto">
+    Discover hidden indie music gems tailored to your taste
+  </p>
+</header>
 
         <ArtistInput
           artists={artists}
