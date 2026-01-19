@@ -29,7 +29,8 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
           className="
             flex-1
             h-14
-            rounded-3xl
+            h-16 
+          rounded-xl
             bg-[#1c1c28]
             border border-slate-400
             text-slate-300
@@ -44,7 +45,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
           onClick={handleAdd}
           className="
             absolute right-1 top-1/2 -translate-y-1/2
-            w-12 h-12
+            w-14 h-14 rounded-xl
             bg-transparent border border-slate-400
             rounded-lg
             text-white text-xl font-bold
