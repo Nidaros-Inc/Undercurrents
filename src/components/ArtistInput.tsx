@@ -20,7 +20,6 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
   return (
     <div className="flex flex-col gap-4 items-center">
      {/* Input + '+' button container */}
-{/* Input + '+' button container */}
 <div className="relative flex items-center w-2/3 group">
   {/* Glow container */}
   <div className="absolute inset-0 rounded-xl pointer-events-none
@@ -31,8 +30,8 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
                   group-hover:opacity-20
                   group-focus-within:opacity-25"></div>
 
-  {/* Input + button wrapper */}
-  <div className="flex w-full items-center relative rounded-xl overflow-hidden border border-slate-400 bg-[#1c1c28] p-1">
+  {/* Input + button wrapper with uniform padding */}
+  <div className="flex w-full items-center relative rounded-xl overflow-hidden border border-slate-400 bg-[#1c1c28] p-2">
     {/* Input box */}
     <input
       type="text"
@@ -41,7 +40,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
       placeholder="Type an artist you love..."
       className="
         flex-1
-        h-16
+        h-14
         bg-transparent
         text-slate-300
         placeholder:text-slate-400
@@ -51,12 +50,12 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
       "
     />
 
-    {/* '+' button as a smaller square, slightly inset, darker grey */}
+    {/* '+' button with uniform gaps */}
     <button
       onClick={handleAdd}
       className="
         w-12 h-12
-        -mr-1
+        ml-2
         bg-slate-800
         border border-slate-400
         rounded-lg
