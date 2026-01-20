@@ -66,6 +66,12 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
     </button>
   </div>
 </div>
+      {artists.length === 0 && (
+  <div className="mt-6 text-center text-slate-400 italic text-sm leading-relaxed">
+    <div>No artists added yet.</div>
+    <div>Add up to {maxArtists} to get started</div>
+  </div>
+)}
       {/* List of added artists */}
       <div className="flex flex-wrap gap-2 w-2/3">
         {artists.map(artist => (
