@@ -43,7 +43,9 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
         placeholder:text-slate-500
         pl-4
         transition-all duration-200
-        focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-opacity-40
+        focus:outline-none
+focus:border-purple-300
+focus:shadow-[0_0_0_1px_rgba(196,181,253,0.6),_0_0_20px_rgba(168,85,247,0.25)]
       "
     />
 
