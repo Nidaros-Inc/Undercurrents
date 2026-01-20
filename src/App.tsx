@@ -10,7 +10,7 @@ function App() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const MAX_ARTISTS = 5;
+  const MAX_ARTISTS = 8;
 
   const handleAddArtist = (name: string) => {
     const newArtist: Artist = {
