@@ -67,7 +67,7 @@ function App() {
     Undercurrents
   </h1>
   <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
-    Discover hidden indie music gems tailored to your taste
+    Discover hidden music gems tailored to your taste
   </p>
 </header>
 
