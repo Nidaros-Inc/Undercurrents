@@ -72,7 +72,7 @@ transition-shadow duration-200
 </div>
    {artists.length === 0 && (
   <div className="mt-6 text-center text-slate-500 italic text-sm">
-    No artists added yet. Add up to {maxArtists} to get started.
+    No artists added yet. Add up to {maxArtists} to get started
   </div>
 )}
       {/* List of added artists */}
