@@ -44,8 +44,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
         pl-4
         transition-all duration-200
         focus:outline-none
-focus:border-purple-300
-focus:shadow-[inset_-0.5rem_0_0_0_rgba(196,181,253,0.6),_0_0_24px_rgba(196,181,253,0.35)]
+focus:shadow-[0_0_24px_rgba(196,181,253,0.35)]
 focus:rounded-tl-xl
 focus:rounded-bl-xl
 transition-shadow duration-200
