@@ -22,13 +22,10 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
    {/* Input + '+' button container */}
 <div className="relative flex items-center w-2/3 group">
   {/* Glow container */}
-  <div className="absolute inset-0 rounded-xl pointer-events-none
-                  bg-purple-700/10
-                  blur-lg
-                  opacity-0
-                  transition-opacity duration-500
-                  group-hover:opacity-20
-                  group-focus-within:opacity-25"></div>
+  <div className="absolute -inset-1 rounded-xl pointer-events-none
+                bg-purple-600/20
+                blur-xl
+                opacity-40"></div>
 
   {/* Input + button wrapper with uniform padding */}
   <div className="flex w-full items-center relative rounded-xl overflow-hidden border border-slate-600 bg-[#1c1c28] p-2">
