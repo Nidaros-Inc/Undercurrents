@@ -58,7 +58,7 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
         rounded-lg
         text-white text-xl font-bold
         flex items-center justify-center
-        hover:bg-purple-700 hover:bg-opacity-30
+        hover:bg-[#1f1f27]
         transition-all duration-200
       "
     >
