@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.45);
+  }
+}
