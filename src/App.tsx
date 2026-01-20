@@ -44,6 +44,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a1830] via-[#0a1830]  to-[#18135a] -slate-300 p-8">
+      {/* Top logo badge */}
+<div className="flex justify-center mb-10">
+  <div className="
+    px-5 py-2
+    rounded-full
+    border border-purple-400/60
+    text-purple-300
+    text-sm
+    tracking-wide
+    shadow-[0_0_18px_rgba(168,85,247,0.35)]
+    bg-purple-900/10
+  ">
+    Music Discovery From Nidaros
+  </div>
+</div>
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-10">
  <h1 className="text-6xl font-extrabold tracking-tight mb-4 text-white">
