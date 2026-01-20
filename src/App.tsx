@@ -62,12 +62,15 @@ function App() {
 </div>
 </div>
       <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-10">
- <h1 className="text-6xl font-extrabold tracking-tight mb-4 text-white">
+        <header className="text-center mb-12 relative">
+  <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent
+                 relative z-10
+                 before:absolute before:inset-0 before:blur-lg before:bg-purple-700/10 before:rounded-xl before:-z-10">
     Undercurrents
   </h1>
-  <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
-    Discover hidden music gems tailored to your taste
+  <p className="text-xl text-slate-300 relative z-10
+                before:absolute before:inset-0 before:blur-lg before:bg-purple-700/10 before:rounded-xl before:-z-10">
+    Discover hidden indie music gems tailored to your taste
   </p>
 </header>
 
