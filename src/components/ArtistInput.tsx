@@ -66,10 +66,9 @@ export default function ArtistInput({ artists, onAdd, onRemove, maxArtists }: Pr
     </button>
   </div>
 </div>
-      {artists.length === 0 && (
-  <div className="mt-6 text-center text-slate-400 italic text-sm leading-relaxed">
-    <div>No artists added yet.</div>
-    <div>Add up to {maxArtists} to get started</div>
+   {artists.length === 0 && (
+  <div className="mt-6 text-center text-slate-500 italic text-sm">
+    No artists added yet. Add up to {maxArtists} to get started.
   </div>
 )}
       {/* List of added artists */}
