@@ -56,14 +56,14 @@ function App() {
   <div
   style={{ animation: 'glowPulse 7s ease-in-out infinite' }}
   className="
-  flex items-center gap-1.5
-  px-3 py-1.5
-  rounded-lg
+  flex items-center gap-1
+  px-2.5 py-1
+  rounded-md
   bg-[#1c1c28]
-  border border-slate-500
-  text-slate-400
-  text-xs italic
-  hover:bg-slate-700/30
+  border border-slate-600
+  text-slate-500
+  text-[11px] italic
+  hover:bg-slate-700/25
   transition-all duration-200
 "
 >
