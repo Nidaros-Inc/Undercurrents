@@ -90,12 +90,21 @@ function App() {
            <button
   onClick={handleGetRecommendations}
   disabled={loading || artists.length === 0}
-  className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-colors"
+  className="
+  bg-[#1c1c28]
+  border border-slate-600
+  text-slate-500
+  px-8 py-4
+  rounded-2xl
+  text-lg font-semibold
+  transition-all duration-200
+  disabled:opacity-80
+"
 >
-  {loading ? (
-  <span className="flex items-center">
-    Analyzing soundscapes
-    <span className="ml-1 inline-block w-[1.5em] text-left loading-dots" />
+ {loading ? (
+  <span className="flex items-center justify-center gap-2">
+    <span className="ai-spinner" />
+    Analyzing soundscapes...
   </span>
 ) : (
   'Get Recommendations'
