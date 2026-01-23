@@ -92,7 +92,14 @@ function App() {
   disabled={loading || artists.length === 0}
   className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-colors"
 >
-  {loading ? 'Analyzing soundscapes...' : 'Get Recommendations'}
+  {loading ? (
+  <span className="flex items-center gap-1">
+    Analyzing soundscapes
+    <span className="loading-dots">...</span>
+  </span>
+) : (
+  'Get Recommendations'
+)}
 </button>
 {hasSearched && (
   <div className="mt-4 flex justify-center">
