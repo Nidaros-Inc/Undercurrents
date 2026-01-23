@@ -99,18 +99,28 @@ function App() {
     <button
       onClick={handleNewSearch}
      className="
+  className="
+  group
   flex items-center gap-1
   px-2.5 py-1
   rounded-md
   bg-[#1c1c28]
   border border-slate-600
   text-slate-500
-  text-[11px] italic
+  text-[11px]
   hover:bg-slate-700/25
   transition-all duration-200
 "
     >
-      <span className="text-lg">↺</span>
+      <span
+  className="
+    text-[13px]
+    transition-transform duration-300
+    group-hover:-rotate-180
+  "
+>
+  ↺
+</span>
       New Search
     </button>
   </div>
