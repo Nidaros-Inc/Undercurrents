@@ -99,7 +99,6 @@ function App() {
     <button
       onClick={handleNewSearch}
      className="
-  className="
   group
   flex items-center gap-1
   px-2.5 py-1
