@@ -23,3 +23,18 @@
   66%  { content: '..'; }
   100% { content: '...'; }
 }
+.ai-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(168, 85, 247, 0.25);
+  border-top-color: rgba(196, 181, 253, 0.95);
+  animation: ai-spin 0.9s linear infinite;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.45);
+}
+
+@keyframes ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
