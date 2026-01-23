@@ -10,6 +10,7 @@ function App() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
   const MAX_ARTISTS = 8;
 
   const handleAddArtist = (name: string) => {
@@ -32,14 +33,20 @@ function App() {
   setRecommendations([]); // Clear previous recommendations immediately
 
   try {
-    const response = await getRecommendations(artists);
-    setRecommendations(response.recommendations);
-  } catch (err) {
-    setError('Failed to get recommendations. Please try again.');
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
+  const response = await getRecommendations(artists);
+  setRecommendations(response.recommendations);
+  setHasSearched(true);
+} catch (err) {
+  setError('Failed to get recommendations. Please try again.');
+} finally {
+  setLoading(false);
+}
+  };
+    const handleNewSearch = () => {
+  setArtists([]);
+  setRecommendations([]);
+  setError(null);
+  setHasSearched(false);
 };
 
   return (
@@ -86,7 +93,27 @@ function App() {
 >
   {loading ? 'Analyzing soundscapes...' : 'Get Recommendations'}
 </button>
-
+{hasSearched && (
+  <div className="mt-4 flex justify-center">
+    <button
+      onClick={handleNewSearch}
+      className="
+        flex items-center gap-2
+        px-4 py-2
+        rounded-xl
+        bg-[#1c1c28]
+        border border-slate-400
+        text-slate-300
+        text-sm italic
+        hover:bg-slate-700/40
+        transition-all duration-200
+      "
+    >
+      <span className="text-lg">↺</span>
+      New Search
+    </button>
+  </div>
+)}
 {loading && (
   <p className="mt-4 text-slate-300">AI is generating recommendations, please wait...</p>
 )}
