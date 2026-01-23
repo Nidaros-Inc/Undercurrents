@@ -99,17 +99,17 @@ function App() {
   <div className="mt-4 flex justify-center">
     <button
       onClick={handleNewSearch}
-      className="
-        flex items-center gap-2
-        px-4 py-2
-        rounded-xl
-        bg-[#1c1c28]
-        border border-slate-400
-        text-slate-300
-        text-sm italic
-        hover:bg-slate-700/40
-        transition-all duration-200
-      "
+     className="
+  flex items-center gap-1
+  px-2.5 py-1
+  rounded-md
+  bg-[#1c1c28]
+  border border-slate-600
+  text-slate-500
+  text-[11px] italic
+  hover:bg-slate-700/25
+  transition-all duration-200
+"
     >
       <span className="text-lg">↺</span>
       New Search
