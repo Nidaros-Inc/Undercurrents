@@ -93,9 +93,9 @@ function App() {
   className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-colors"
 >
   {loading ? (
-  <span className="flex items-center gap-1">
+  <span className="flex items-center">
     Analyzing soundscapes
-    <span className="loading-dots">...</span>
+    <span className="ml-1 inline-block w-[1.5em] text-left loading-dots" />
   </span>
 ) : (
   'Get Recommendations'
