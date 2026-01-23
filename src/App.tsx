@@ -56,14 +56,16 @@ function App() {
   <div
   style={{ animation: 'glowPulse 7s ease-in-out infinite' }}
   className="
-    px-5 py-2
-    rounded-full
-    border border-purple-400/60
-    text-purple-300
-    text-sm
-    tracking-wide
-    bg-purple-900/10
-  "
+  flex items-center gap-1.5
+  px-3 py-1.5
+  rounded-lg
+  bg-[#1c1c28]
+  border border-slate-500
+  text-slate-400
+  text-xs italic
+  hover:bg-slate-700/30
+  transition-all duration-200
+"
 >
   Music Discovery From Nidaros
 </div>
