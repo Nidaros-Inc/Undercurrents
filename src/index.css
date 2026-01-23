@@ -13,7 +13,10 @@
   content: '';
   animation: dots 1.4s infinite;
 }
-
+.loading-dots {
+  color: rgb(196 181 253); /* soft purple */
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.35);
+}
 @keyframes dots {
   0%   { content: ''; }
   33%  { content: '.'; }
