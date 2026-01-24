@@ -76,9 +76,8 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
           <i className="fa-brands fa-youtube mr-2"></i> Listen
         </a>
       </div>
-        </div>
   </div>
 );
-
+    };
 
 export default RecommendationCard;
