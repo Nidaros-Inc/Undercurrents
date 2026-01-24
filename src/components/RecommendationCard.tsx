@@ -32,7 +32,12 @@ className="
     >
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-2xl font-bold text-white">
+          <h3
+  className="text-2xl font-bold text-white"
+  style={{
+    textShadow: '0 0 8px rgba(255,255,255,0.12)',
+  }}
+>
             {recommendation.name}
           </h3>
           <span className="inline-block px-3 py-1 bg-indigo-500/10 text-indigo-400 text-xs font-semibold rounded-full mt-1 border border-indigo-500/20 uppercase tracking-wider">
