@@ -70,11 +70,11 @@ transition-shadow duration-200
     </button>
   </div>
 </div>
-   {artists.length === 0 && (
-  <div className="mt-6 text-center text-slate-500 italic text-sm">
-    No artists added yet. Add up to {maxArtists} to get started
-  </div>
-)}
+   <p className="mt-8 text-center text-sm text-slate-500">
+  {artists.length === 0
+    ? 'No artists added yet. Add up to 8 to get started'
+    : `${artists.length}/8 artists added`}
+</p>
       {/* List of added artists */}
       <div className="flex flex-wrap gap-2 w-2/3">
         {artists.map(artist => (
