@@ -8,7 +8,7 @@ interface RecommendationCardProps {
 }
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation, index }) => {
-  return (
+
     return (
   <div className="relative group">
     {/* Glow layer */}
