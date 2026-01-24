@@ -9,8 +9,24 @@ interface RecommendationCardProps {
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation, index }) => {
   return (
+    return (
+  <div className="relative group">
+    {/* Glow layer */}
+    <div
+      className="
+        absolute inset-0
+        rounded-3xl
+        bg-purple-700/10
+        blur-xl
+        opacity-0
+        transition-opacity duration-500
+        group-hover:opacity-25
+      "
+    />
+
+    {/* Card */}
     <div 
-      className="bg-slate-800/40 border border-slate-700/50 p-6 rounded-3xl hover:bg-slate-800/60 transition-all hover:scale-[1.02] group"
+      className="relative z-10 bg-slate-800/40 border border-slate-700/50 p-6 rounded-3xl hover:bg-slate-800/60 transition-all hover:scale-[1.02]"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="flex justify-between items-start mb-4">
@@ -60,7 +76,9 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
           <i className="fa-brands fa-youtube mr-2"></i> Listen
         </a>
       </div>
-    </div>
+        </div>
+  </div>
+);
   );
 };
 
