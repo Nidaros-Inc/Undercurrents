@@ -13,16 +13,17 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
   <div className="relative group">
     {/* Glow layer */}
     <div
-      className="
-        absolute inset-0
-        rounded-3xl
-        bg-purple-700/10
-        blur-xl
-        opacity-0
-        transition-opacity duration-500
-        group-hover:opacity-25
-      "
-    />
+className="
+  absolute inset-0
+  rounded-3xl
+  bg-purple-600/20
+  blur-2xl
+  opacity-10
+  transition-opacity duration-500
+  group-hover:opacity-40
+  animate-[pulse_6s_ease-in-out_infinite]
+"
+/>
 
     {/* Card */}
     <div 
