@@ -95,7 +95,7 @@ transition-shadow duration-200
     rounded-full
     flex items-center gap-2
     text-slate-300
-    bg-[#1c1c28]
+    bg-[#23233a]
     border border-slate-600
     shadow-[0_0_12px_rgba(168,85,247,0.18)]
     transition-all duration-200
