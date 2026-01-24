@@ -35,7 +35,7 @@ className="
           <h3
   className="text-2xl font-bold text-white"
   style={{
-    textShadow: '0 0 8px rgba(255,255,255,0.12)',
+    textShadow: '0 0 8px rgba(255,255,255,0.16)',
   }}
 >
             {recommendation.name}
