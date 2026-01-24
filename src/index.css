@@ -38,3 +38,17 @@
     transform: rotate(360deg);
   }
 }
+@keyframes pulseSoft {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(168, 85, 247, 0);
+  }
+  50% {
+    transform: scale(1.04);
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.35);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(168, 85, 247, 0);
+  }
+}
