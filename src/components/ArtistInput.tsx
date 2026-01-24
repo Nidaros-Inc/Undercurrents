@@ -70,7 +70,16 @@ transition-shadow duration-200
     </button>
   </div>
 </div>
-   <p className="mt-8 text-center text-sm text-slate-500">
+   <p
+  key={artists.length}
+  className="
+    mt-8
+    text-center
+    text-sm
+    text-slate-500
+    animate-[pulseSoft_600ms_ease-out]
+  "
+>
   {artists.length === 0
     ? 'No artists added yet. Add up to 8 to get started'
     : `${artists.length}/8 artists added`}
