@@ -14,12 +14,14 @@ function App() {
   const MAX_ARTISTS = 8;
 
   const handleAddArtist = (name: string) => {
-    const newArtist: Artist = {
-      id: crypto.randomUUID(),
-      name,
-    };
-    setArtists([...artists, newArtist]);
+  const newArtist: Artist = {
+    id: crypto.randomUUID(),
+    name,
   };
+
+  setArtists([...artists, newArtist]);
+  setError(null); // 👈 hide error when user starts a new search
+};
 
   const handleRemoveArtist = (id: string) => {
     setArtists(artists.filter(artist => artist.id !== id));
