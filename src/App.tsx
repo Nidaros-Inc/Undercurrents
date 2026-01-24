@@ -147,10 +147,25 @@ function App() {
         )}
 
         {error && (
-          <div className="mt-8 p-4 bg-red-900/50 border border-red-700 rounded-2xl text-center">
-            {error}
-          </div>
-        )}
+  <div className="flex justify-center mt-10">
+    <div
+      style={{ animation: 'glowPulseOrange 6s ease-in-out infinite' }}
+      className="
+        px-6 py-3
+        rounded-full
+        border border-orange-300/60
+        text-orange-200
+        text-sm md:text-base
+        tracking-wide
+        shadow-[0_0_20px_rgba(251,146,60,0.35)]
+        bg-orange-900/10
+        text-center
+      "
+    >
+      Failed to get recommendations — please try again
+    </div>
+  </div>
+)}
 
         {recommendations.length > 0 && (
           <div className="mt-12 space-y-6">
