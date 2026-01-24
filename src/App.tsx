@@ -28,22 +28,36 @@ function App() {
   };
 
   const handleGetRecommendations = async () => {
-  if (artists.length === 0) return;
+  if (artists.length === 0) {
+    console.log('No artists added yet.');
+    return;
+  }
 
   setLoading(true);
   setError(null);
   setRecommendations([]); // Clear previous recommendations immediately
+  console.log('Artists being sent to API:', artists);
 
   try {
-  const response = await getRecommendations(artists);
-  setRecommendations(response.recommendations);
-  setHasSearched(true);
-} catch (err) {
-  setError('Failed to get recommendations. Please try again.');
-} finally {
-  setLoading(false);
-}
-  };
+    const response = await getRecommendations(artists);
+    console.log('Raw API response:', response);
+
+    if (!response || !Array.isArray(response.recommendations)) {
+      console.error('Unexpected response format:', response);
+      setError('API returned unexpected data.');
+      return;
+    }
+
+    console.log('Parsed recommendations:', response.recommendations);
+    setRecommendations(response.recommendations);
+    setHasSearched(true);
+  } catch (err) {
+    console.error('Error fetching recommendations:', err);
+    setError('Failed to get recommendations. Please check the console for details.');
+  } finally {
+    setLoading(false);
+  }
+};
     const handleNewSearch = () => {
   setArtists([]);
   setRecommendations([]);
