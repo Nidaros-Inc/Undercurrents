@@ -87,18 +87,40 @@ transition-shadow duration-200
       {/* List of added artists */}
       <div className="flex flex-wrap gap-2 w-2/3">
         {artists.map(artist => (
-          <div
-            key={artist.id}
-            className="bg-purple-700 px-4 py-2 rounded-full flex items-center gap-2"
-          >
-            <span>{artist.name}</span>
-            <button
-              onClick={() => onRemove(artist.id)}
-              className="text-white font-bold px-2 rounded-full hover:bg-purple-500 transition-colors"
-            >
-              ×
-            </button>
-          </div>
+         <div
+  key={artist.id}
+  className="
+    relative
+    px-4 py-2
+    rounded-full
+    flex items-center gap-2
+    text-slate-300
+    bg-[#1c1c28]
+    border border-slate-600
+    shadow-[0_0_12px_rgba(168,85,247,0.18)]
+    transition-all duration-200
+  "
+>
+  <span className="text-sm">
+    {artist.name}
+  </span>
+
+  <button
+    onClick={() => onRemove(artist.id)}
+    className="
+      text-slate-400
+      text-sm
+      px-1
+      rounded-full
+      hover:text-slate-200
+      hover:bg-white/5
+      transition-colors
+    "
+    aria-label={`Remove ${artist.name}`}
+  >
+    ×
+  </button>
+</div>
         ))}
       </div>
     </div>
