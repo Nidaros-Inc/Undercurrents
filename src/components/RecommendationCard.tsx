@@ -40,8 +40,18 @@ className="
 >
             {recommendation.name}
           </h3>
-          <span className="inline-block px-3 py-1 bg-indigo-500/10 text-indigo-400 text-xs font-semibold rounded-full mt-1 border border-indigo-500/20 uppercase tracking-wider">
-            {recommendation.genre}
+         <span className="
+  inline-block
+  px-3 py-1
+  bg-purple-900/10
+  text-purple-300
+  text-xs font-semibold
+  rounded-full
+  mt-1
+  border border-purple-400/60
+  tracking-wider uppercase
+  shadow-[0_0_10px_rgba(168,85,247,0.35)]
+">
           </span>
         </div>
         <div className="flex flex-col items-end">
