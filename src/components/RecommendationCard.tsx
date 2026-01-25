@@ -40,7 +40,7 @@ className="
 >
             {recommendation.name}
           </h3>
-         <span className="
+     <span className="
   inline-block
   px-3 py-1
   bg-purple-900/10
@@ -52,6 +52,7 @@ className="
   tracking-wider uppercase
   shadow-[0_0_10px_rgba(168,85,247,0.35)]
 ">
+  {recommendation.genre}
           </span>
         </div>
         <div className="flex flex-col items-end">
