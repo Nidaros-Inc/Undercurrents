@@ -106,15 +106,18 @@ function App() {
            <button
   onClick={handleGetRecommendations}
   disabled={loading || artists.length === 0}
-  className="
-  bg-[#1c1c28]
-  border border-slate-600
-  text-slate-500
+className="
+  bg-purple-900/10
+  border border-purple-400/60
+  text-purple-300
   px-8 py-4
   rounded-2xl
   text-lg font-semibold
+  tracking-wide
+  shadow-[0_0_18px_rgba(168,85,247,0.35)]
+  hover:shadow-[0_0_26px_rgba(168,85,247,0.5)]
   transition-all duration-200
-  disabled:opacity-80
+  disabled:opacity-70
 "
 >
  {loading ? (
