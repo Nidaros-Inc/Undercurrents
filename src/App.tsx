@@ -122,7 +122,9 @@ className="
 >
  {loading ? (
   <span className="flex items-center justify-center gap-2">
-    <span className="ai-spinner" />
+   <span className="spinner-offset">
+  <span className="ai-spinner" />
+</span>
     Analyzing soundscapes...
   </span>
 ) : (
