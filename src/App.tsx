@@ -107,16 +107,16 @@ function App() {
   onClick={handleGetRecommendations}
   disabled={loading || artists.length === 0}
 className="
-  bg-purple-900/10
-  border border-purple-400/60
-  text-purple-300
+  bg-sky-900/20
+  border border-sky-400/60
+  text-sky-200
   px-8 py-4
   rounded-2xl
   text-lg font-semibold
   tracking-wide
-  shadow-[0_0_18px_rgba(168,85,247,0.35)]
-  hover:shadow-[0_0_26px_rgba(168,85,247,0.5)]
   transition-all duration-200
+  shadow-[0_0_22px_rgba(56,189,248,0.45)]
+  hover:shadow-[0_0_30px_rgba(56,189,248,0.6)]
   disabled:opacity-70
 "
 >
