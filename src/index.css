@@ -48,7 +48,7 @@
 .spinner-offset {
   display: flex;
   align-items: center;
-  transform: translateX(-2px); /* subtle left nudge */
+  transform: translateX(-4px); /* subtle left nudge */
 }
 @keyframes spin {
   to {
