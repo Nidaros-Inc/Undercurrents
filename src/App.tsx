@@ -87,7 +87,7 @@ function App() {
 </div>
       <div className="max-w-4xl mx-auto">
                <header className="text-center mb-10 px-4">
-<h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
+<h1 className="text-5xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
     Undercurrents
   </h1>
   <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
