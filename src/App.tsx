@@ -28,6 +28,15 @@ function App() {
   };
 
   const handleGetRecommendations = async () => {
+
+  // 🔒 FREE USE CHECK
+  const hasUsedFree = localStorage.getItem("hasUsedFree");
+
+  if (hasUsedFree) {
+    alert("You have already used your free recommendation. Please purchase to continue.");
+    return;
+  }
+
   if (artists.length === 0) {
     console.log('No artists added yet.');
     return;
@@ -35,25 +44,24 @@ function App() {
 
   setLoading(true);
   setError(null);
-  setRecommendations([]); // Clear previous recommendations immediately
-  console.log('Artists being sent to API:', artists);
+  setRecommendations([]);
 
   try {
     const response = await getRecommendations(artists);
-    console.log('Raw API response:', response);
 
     if (!response || !Array.isArray(response.recommendations)) {
-      console.error('Unexpected response format:', response);
       setError('API returned unexpected data.');
       return;
     }
 
-    console.log('Parsed recommendations:', response.recommendations);
     setRecommendations(response.recommendations);
     setHasSearched(true);
+
+    // ✅ MARK FREE USE AS USED (only after success)
+    localStorage.setItem("hasUsedFree", "true");
+
   } catch (err) {
-    console.error('Error fetching recommendations:', err);
-    setError('Failed to get recommendations. Please check the console for details.');
+    setError('Failed to get recommendations.');
   } finally {
     setLoading(false);
   }
