@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Undercurrents</string>
+    <string name="title_activity_main">Undercurrents</string>
+    <string name="package_name">com.nidaros.undercurrents</string>
+    <string name="custom_url_scheme">com.nidaros.undercurrents</string>
+</resources>
