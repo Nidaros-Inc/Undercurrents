@@ -98,29 +98,6 @@ try {
 } finally {
   setLoading(false);
 }
-
-    setLoading(true);
-    setError(null);
-    setRecommendations([]);
-
-    try {
-      const response = await getRecommendations(artists);
-
-      if (!response || !Array.isArray(response.recommendations)) {
-        setError("API returned unexpected data.");
-        return;
-      }
-
-      setRecommendations(response.recommendations);
-      setHasSearched(true);
-
-      // Mark free-use as used
-      localStorage.setItem("hasUsedFree", "true");
-    } catch (err) {
-      setError("Failed to get recommendations.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleNewSearch = () => {
