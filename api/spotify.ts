@@ -62,6 +62,7 @@ export default async function handler(
   }
 
   return res.status(200).json({
-    spotifyUrl: result.external_urls.spotify,
-  });
+  spotifyUrl: result.external_urls.spotify,
+  image: result.images?.[0]?.url || null
+});
 }
