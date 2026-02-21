@@ -10,6 +10,8 @@ export interface Recommendation {
   description: string;
   whyYouWillLikeIt: string;
   obscurityLevel: number; // 1-10, where 10 is very obscure
+  spotifyUrl?: string | null;
+image?: string | null;
 }
 
 export interface RecommendationResponse {

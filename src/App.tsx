@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { useState, useEffect } from 'react';
 import ArtistInput from './components/ArtistInput';
 import RecommendationCard from './components/RecommendationCard';
@@ -18,18 +19,32 @@ function App() {
   // -------------------------
   // Initialize Google Play Billing
   // -------------------------
-  useEffect(() => {
-    if (window?.Capacitor?.isNative) {
-      store.register({
-        id: "full_unlock", // Replace with your Google Play product ID
-        type: store.NON_CONSUMABLE, // one-time purchase
-      });
-      store.refresh();
-    }
+useEffect(() => {
+  if (!Capacitor.isNativePlatform()) return;
 
-    // Reference store to satisfy TypeScript
-    console.log(store);
-  }, []);
+  if (!store || typeof store.register !== "function") {
+    console.log("Billing store not available");
+    return;
+  }
+
+  try {
+    store.register({
+      id: "full_unlock",
+      type: store.NON_CONSUMABLE,
+    });
+
+    store.when("full_unlock").updated((product: any) => {
+      if (product.owned) {
+        localStorage.setItem("isPremium", "true");
+        product.finish();
+      }
+    });
+
+    store.refresh();
+  } catch (err) {
+    console.error("Billing init failed:", err);
+  }
+}, []);
 
   // -------------------------
   // Artist management
@@ -58,13 +73,13 @@ const isPremium = localStorage.getItem("isPremium");
 
 // If user exceeded free use and is not premium
 if (!isPremium && hasUsedFree) {
-  if ((window as any)?.Capacitor?.isNative) {
-    store.order("full_unlock"); // triggers Google Play purchase
-  } else {
-    alert(
-      "You have already used your free recommendation. Purchase would be triggered on a device!"
-    );
-  }
+ if (Capacitor.isNativePlatform()) {
+  store.order("full_unlock");
+} else {
+  alert(
+    "You have already used your free recommendation. Purchase works only in the installed Android app."
+  );
+}
   return;
 }
 

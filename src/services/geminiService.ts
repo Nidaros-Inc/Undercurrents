@@ -47,7 +47,34 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
     const text = response.text;
     if (!text) throw new Error("No response text from Gemini");
     
-    return JSON.parse(text.trim()) as RecommendationResponse;
+    const parsed = JSON.parse(text.trim()) as RecommendationResponse;
+
+// Enrich each recommendation with Spotify data
+const enrichedRecommendations = await Promise.all(
+  parsed.recommendations.map(async (rec) => {
+    try {
+      const spotifyRes = await fetch(
+        `/api/spotify?artist=${encodeURIComponent(rec.name)}`
+      );
+
+      if (!spotifyRes.ok) return rec;
+
+      const spotifyData = await spotifyRes.json();
+
+      return {
+        ...rec,
+        spotifyUrl: spotifyData.spotifyUrl || null,
+        image: spotifyData.image || null,
+      };
+    } catch {
+      return rec;
+    }
+  })
+);
+
+return {
+  recommendations: enrichedRecommendations,
+};
   } catch (error) {
     console.error("Error fetching recommendations:", error);
     throw error;
