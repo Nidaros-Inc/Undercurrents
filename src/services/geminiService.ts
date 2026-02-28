@@ -1,8 +1,9 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
+import { Capacitor } from "@capacitor/core";
 import type { Artist, RecommendationResponse } from "../types";
 const API_BASE =
-  window.location.origin.startsWith("http")
+  Capacitor.getPlatform() === "web"
     ? ""
     : "https://undercurrents-umber.vercel.app";
 
@@ -57,7 +58,7 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
 const enrichedRecommendations = await Promise.all(
   parsed.recommendations.map(async (rec) => {
     try {
-      const spotifyRes = await fetch(
+  const spotifyRes = await fetch(
   `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}`
 );
       if (!spotifyRes.ok) return rec;
