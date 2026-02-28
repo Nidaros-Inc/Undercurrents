@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 let accessToken: string | null = null;
 let tokenExpires = 0;
@@ -35,6 +35,21 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+
+  // ✅ CORS HEADERS (must be INSIDE handler)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // ✅ Handle preflight
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   const { artist } = req.query;
 
   if (!artist) {
@@ -62,7 +77,7 @@ export default async function handler(
   }
 
   return res.status(200).json({
-  spotifyUrl: result.external_urls.spotify,
-  image: result.images?.[0]?.url || null
-});
+    spotifyUrl: result.external_urls.spotify,
+    image: result.images?.[0]?.url || null,
+  });
 }
