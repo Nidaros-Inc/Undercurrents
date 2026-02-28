@@ -1,6 +1,10 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Artist, RecommendationResponse } from "../types";
+const API_BASE =
+  window.location.origin.startsWith("http")
+    ? ""
+    : "https://undercurrents-umber.vercel.app";
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY || '' });
 
@@ -54,9 +58,8 @@ const enrichedRecommendations = await Promise.all(
   parsed.recommendations.map(async (rec) => {
     try {
       const spotifyRes = await fetch(
-        `/api/spotify?artist=${encodeURIComponent(rec.name)}`
-      );
-
+  `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}`
+);
       if (!spotifyRes.ok) return rec;
 
       const spotifyData = await spotifyRes.json();
