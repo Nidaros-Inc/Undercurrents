@@ -40,7 +40,7 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-2.0-flash-lite",
       contents: prompt,
       config: {
         systemInstruction: "You are a professional music curator with deep knowledge of underground scenes across all genres. Your goal is to help users discover music they wouldn't find on a typical Top 40 list. You specialize in 'if you like X, you might love Y' connections that go beyond surface-level similarities.",
@@ -58,19 +58,27 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
 const enrichedRecommendations = await Promise.all(
   parsed.recommendations.map(async (rec) => {
     try {
-  const spotifyRes = await fetch(
-  `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}`
-);
-      if (!spotifyRes.ok) return rec;
+      const url = `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}`;
+      console.log("Calling Spotify API:", url);
+
+      const spotifyRes = await fetch(url);
+      console.log("Spotify response status:", spotifyRes.status);
+
+      if (!spotifyRes.ok) {
+        console.log("Spotify response not OK");
+        return rec;
+      }
 
       const spotifyData = await spotifyRes.json();
+      console.log("Spotify data:", spotifyData);
 
       return {
         ...rec,
         spotifyUrl: spotifyData.spotifyUrl || null,
         image: spotifyData.image || null,
       };
-    } catch {
+    } catch (err) {
+      console.log("Spotify fetch failed:", err);
       return rec;
     }
   })

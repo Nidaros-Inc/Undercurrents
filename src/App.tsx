@@ -1,12 +1,12 @@
-import { Capacitor } from '@capacitor/core';
-import { useState, useEffect } from 'react';
+//import { Capacitor } from '@capacitor/core';
+import { useState} from 'react';
 import ArtistInput from './components/ArtistInput';
 import RecommendationCard from './components/RecommendationCard';
 import { getRecommendations } from './services/geminiService';
 import type { Artist, Recommendation } from './types';
 
 // Google Play Billing plugin
-import { InAppPurchase2 as store } from '@awesome-cordova-plugins/in-app-purchase-2';
+
 
 function App() {
   const [artists, setArtists] = useState<Artist[]>([]);
@@ -19,32 +19,44 @@ function App() {
   // -------------------------
   // Initialize Google Play Billing
   // -------------------------
-useEffect(() => {
-  if (!Capacitor.isNativePlatform()) return;
+//useEffect(() => {
+  //if (Capacitor.getPlatform() === "web") return;
 
-  if (!store || typeof store.register !== "function") {
-    console.log("Billing store not available");
-    return;
-  }
+  //const CdvPurchase = (window as any).CdvPurchase;
 
-  try {
-    store.register({
-      id: "full_unlock",
-      type: store.NON_CONSUMABLE,
-    });
+  //if (!CdvPurchase || !CdvPurchase.store) {
+   // console.log("CdvPurchase not ready yet");
+   // return;
+ // }
 
-    store.when("full_unlock").updated((product: any) => {
-      if (product.owned) {
-        localStorage.setItem("isPremium", "true");
-        product.finish();
-      }
-    });
+ // const store = CdvPurchase.store;
 
-    store.refresh();
-  } catch (err) {
-    console.error("Billing init failed:", err);
-  }
-}, []);
+  //store.register({
+   // id: "full_unlock",
+   // type: store.NON_CONSUMABLE,
+ // });
+
+  //store.when("full_unlock").approved((transaction: any) => {
+    //console.log("Approved");
+    //transaction.verify();
+ // });
+
+  //store.when("full_unlock").verified((receipt: any) => {
+   // console.log("Verified");
+   // localStorage.setItem("isPremium", "true");
+   // receipt.finish();
+ // });
+
+  //store.when("full_unlock").error((err: any) => {
+   // console.log("Store error", err);
+  //});
+
+  //store.ready(() => {
+   // console.log("Store ready");
+  //});
+
+  //store.refresh();
+//}, []);
 
   // -------------------------
   // Artist management
@@ -73,13 +85,9 @@ const isPremium = localStorage.getItem("isPremium");
 
 // If user exceeded free use and is not premium
 if (!isPremium && hasUsedFree) {
- if (Capacitor.isNativePlatform()) {
-  store.order("full_unlock");
-} else {
   alert(
-    "You have already used your free recommendation. Purchase works only in the installed Android app."
+    "You've used your free recommendation. A one-off payment option is coming soon — thank you for your patience!"
   );
-}
   return;
 }
 

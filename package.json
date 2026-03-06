@@ -13,7 +13,6 @@
     "cap:sync": "npx cap sync"
   },
   "dependencies": {
-    "@awesome-cordova-plugins/in-app-purchase-2": "^8.1.0",
     "@capacitor/cli": "^8.1.0",
     "@capacitor/core": "^8.0.2",
     "@google/genai": "^1.37.0",
