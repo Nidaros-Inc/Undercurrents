@@ -23,7 +23,9 @@ export default async function handler(req: any, res: any) {
       contents: prompt,
     });
 
-    res.status(200).json({ text: response.text });
+    let text = response.text || "";
+text = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+res.status(200).json({ text });
   } catch (error) {
     console.error("Gemini error:", error);
     res.status(500).json({ error: "AI failed" });
