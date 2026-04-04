@@ -72,8 +72,8 @@ export default async function handler(
   }
 
   // Filter out high-popularity artists (likely famous mismatches)
-  // Obscure artists typically score below 50
-  const obscureResults = results.filter((a: any) => a.popularity < 75);
+  // Obscure artists typically score below 55
+  const obscureResults = results.filter((a: any) => a.popularity < 55);
 // Use first obscure result, fall back to first result if none pass filter
 const result = obscureResults[0] || results[0];
 if (!result) {
