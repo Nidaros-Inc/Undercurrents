@@ -1,4 +1,3 @@
-
 export interface Artist {
   id: string;
   name: string;
@@ -9,11 +8,13 @@ export interface Recommendation {
   genre: string;
   description: string;
   whyYouWillLikeIt: string;
-  obscurityLevel: number; // 1-10, where 10 is very obscure
+  obscurityLevel: number;
   spotifyUrl?: string | null;
-image?: string | null;
+  image?: string | null;
 }
 
 export interface RecommendationResponse {
   recommendations: Recommendation[];
+  obscurityScore: number;
+  obscurityLabel: string;
 }

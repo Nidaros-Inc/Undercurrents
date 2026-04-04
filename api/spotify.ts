@@ -7,11 +7,9 @@ async function getAccessToken() {
   if (accessToken && Date.now() < tokenExpires) {
     return accessToken;
   }
-
   const credentials = Buffer.from(
     process.env.SPOTIFY_CLIENT_ID + ":" + process.env.SPOTIFY_CLIENT_SECRET
   ).toString("base64");
-
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
@@ -22,12 +20,9 @@ async function getAccessToken() {
       grant_type: "client_credentials",
     }),
   });
-
   const data = await response.json();
-
   accessToken = data.access_token;
   tokenExpires = Date.now() + data.expires_in * 1000;
-
   return accessToken;
 }
 
@@ -35,13 +30,10 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-
-  // ✅ CORS HEADERS (must be INSIDE handler)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // ✅ Handle preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -50,7 +42,7 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { artist } = req.query;
+  const { artist, genre } = req.query;
 
   if (!artist) {
     return res.status(400).json({ error: "Artist name required" });
@@ -58,10 +50,13 @@ export default async function handler(
 
   const token = await getAccessToken();
 
+  // Build search query — include genre if provided to reduce mismatches
+  const searchQuery = genre
+    ? `${artist as string} genre:${genre as string}`
+    : (artist as string);
+
   const response = await fetch(
-    `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-      artist as string
-    )}&type=artist&limit=1`,
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=artist&limit=5`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -70,10 +65,21 @@ export default async function handler(
   );
 
   const data = await response.json();
-  const result = data.artists.items[0];
+  const results = data.artists?.items;
+
+  if (!results || results.length === 0) {
+    return res.status(404).json({ error: "Artist not found" });
+  }
+
+  // Filter out high-popularity artists (likely famous mismatches)
+  // Obscure artists typically score below 50
+  const obscureResults = results.filter((a: any) => a.popularity < 50);
+
+  // Use first obscure result, or fall back to no image/link if none found
+  const result = obscureResults[0];
 
   if (!result) {
-    return res.status(404).json({ error: "Artist not found" });
+    return res.status(404).json({ error: "No sufficiently obscure artist found" });
   }
 
   return res.status(200).json({

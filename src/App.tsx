@@ -1,62 +1,96 @@
-//import { Capacitor } from '@capacitor/core';
-import { useState} from 'react';
+import { Capacitor } from '@capacitor/core';
+import { useState, useEffect } from 'react';
 import ArtistInput from './components/ArtistInput';
 import RecommendationCard from './components/RecommendationCard';
 import { getRecommendations } from './services/geminiService';
 import type { Artist, Recommendation } from './types';
-
-// Google Play Billing plugin
-
+import ShareCard from './components/ShareCard';
 
 function App() {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [obscurityScore, setObscurityScore] = useState<number>(0);
+  const [obscurityLabel, setObscurityLabel] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [unlockProduct, setUnlockProduct] = useState<any>(null);
+  const [searchCount, setSearchCount] = useState<number>(0);
+  const [hasShared, setHasShared] = useState<boolean>(false);
   const MAX_ARTISTS = 8;
 
   // -------------------------
   // Initialize Google Play Billing
   // -------------------------
-//useEffect(() => {
-  //if (Capacitor.getPlatform() === "web") return;
+  useEffect(() => {
+    // Load persisted state
+    if (localStorage.getItem("isPremium") === "true") {
+      setIsPremium(true);
+    }
+    const savedCount = parseInt(localStorage.getItem("searchCount") || "0");
+    setSearchCount(savedCount);
+    if (localStorage.getItem("hasShared") === "true") {
+      setHasShared(true);
+    }
 
-  //const CdvPurchase = (window as any).CdvPurchase;
+    if (Capacitor.getPlatform() === "web") return;
 
-  //if (!CdvPurchase || !CdvPurchase.store) {
-   // console.log("CdvPurchase not ready yet");
-   // return;
- // }
+    const tryInitStore = () => {
+      const CdvPurchase = (window as any).CdvPurchase;
+      if (!CdvPurchase || !CdvPurchase.store) {
+        setTimeout(tryInitStore, 500);
+        return;
+      }
 
- // const store = CdvPurchase.store;
+      const store = CdvPurchase.store;
 
-  //store.register({
-   // id: "full_unlock",
-   // type: store.NON_CONSUMABLE,
- // });
+      // Register subscription product
+      store.register({
+        id: "annual_unlock",
+        type: CdvPurchase.ProductType.PAID_SUBSCRIPTION,
+        platform: CdvPurchase.Platform.GOOGLE_PLAY,
+      });
 
-  //store.when("full_unlock").approved((transaction: any) => {
-    //console.log("Approved");
-    //transaction.verify();
- // });
+      // Keep old product registered for existing purchasers
+      store.register({
+        id: "full_unlock",
+        type: CdvPurchase.ProductType.NON_CONSUMABLE,
+        platform: CdvPurchase.Platform.GOOGLE_PLAY,
+      });
 
-  //store.when("full_unlock").verified((receipt: any) => {
-   // console.log("Verified");
-   // localStorage.setItem("isPremium", "true");
-   // receipt.finish();
- // });
+      store.when()
+        .productUpdated(() => {
+          // Check subscription
+          const subProduct = store.get("annual_unlock", CdvPurchase.Platform.GOOGLE_PLAY);
+          if (subProduct) {
+            setUnlockProduct(subProduct);
+          }
+          if (subProduct?.owned) {
+            localStorage.setItem("isPremium", "true");
+            setIsPremium(true);
+          }
+          // Check legacy one-off purchase
+          const legacyProduct = store.get("full_unlock", CdvPurchase.Platform.GOOGLE_PLAY);
+          if (legacyProduct?.owned) {
+            localStorage.setItem("isPremium", "true");
+            setIsPremium(true);
+          }
+        })
+        .approved((transaction: any) => {
+          transaction.verify();
+        })
+        .verified((receipt: any) => {
+          localStorage.setItem("isPremium", "true");
+          setIsPremium(true);
+          receipt.finish();
+        });
 
-  //store.when("full_unlock").error((err: any) => {
-   // console.log("Store error", err);
-  //});
+      store.initialize([CdvPurchase.Platform.GOOGLE_PLAY]);
+    };
 
-  //store.ready(() => {
-   // console.log("Store ready");
-  //});
-
-  //store.refresh();
-//}, []);
+    tryInitStore();
+  }, []);
 
   // -------------------------
   // Artist management
@@ -75,52 +109,73 @@ function App() {
   };
 
   // -------------------------
+  // Handle purchase
+  // -------------------------
+  const handlePurchase = () => {
+    if (Capacitor.getPlatform() !== "web") {
+      if (unlockProduct && unlockProduct.offers && unlockProduct.offers.length > 0) {
+        unlockProduct.offers[0].order();
+      } else {
+        alert("Subscription not available yet. Please try again in a moment.");
+      }
+    } else {
+      alert("Subscription is only available in the installed Android app.");
+    }
+  };
+
+  // -------------------------
+  // Handle share unlock
+  // -------------------------
+  const handleShareUnlock = () => {
+    localStorage.setItem("hasShared", "true");
+    setHasShared(true);
+  };
+
+  // -------------------------
   // Recommendation & free-use logic
   // -------------------------
   const handleGetRecommendations = async () => {
+    // Free use logic:
+    // searchCount 0 = never searched (allow)
+    // searchCount 1 = used first free search (allow only if hasShared)
+    // searchCount 2+ = used both free searches (must be premium)
+    const allowedSearches = hasShared ? 2 : 1;
 
-// 🔒 FREE USE / PREMIUM CHECK
-const hasUsedFree = localStorage.getItem("hasUsedFree");
-const isPremium = localStorage.getItem("isPremium");
+    if (!isPremium && searchCount >= allowedSearches) {
+      handlePurchase();
+      return;
+    }
 
-// If user exceeded free use and is not premium
-if (!isPremium && hasUsedFree) {
-  alert(
-    "You've used your free recommendation. A one-off payment option is coming soon — thank you for your patience!"
-  );
-  return;
-}
+    if (artists.length === 0) return;
 
-if (artists.length === 0) {
-  console.log("No artists added yet.");
-  return;
-}
+    setLoading(true);
+    setError(null);
+    setRecommendations([]);
 
-setLoading(true);
-setError(null);
-setRecommendations([]);
+    try {
+      const response = await getRecommendations(artists);
 
-try {
-  const response = await getRecommendations(artists);
+      if (!response || !Array.isArray(response.recommendations)) {
+        setError("API returned unexpected data.");
+        return;
+      }
 
-  if (!response || !Array.isArray(response.recommendations)) {
-    setError("API returned unexpected data.");
-    return;
-  }
+      setRecommendations(response.recommendations);
+      setObscurityScore(response.obscurityScore);
+      setObscurityLabel(response.obscurityLabel);
+      setHasSearched(true);
 
-  setRecommendations(response.recommendations);
-  setHasSearched(true);
+      if (!isPremium) {
+        const newCount = searchCount + 1;
+        setSearchCount(newCount);
+        localStorage.setItem("searchCount", newCount.toString());
+      }
 
-  // Mark free use as used only if not premium
-  if (!isPremium) {
-    localStorage.setItem("hasUsedFree", "true");
-  }
-
-} catch (err) {
-  setError("Failed to get recommendations.");
-} finally {
-  setLoading(false);
-}
+    } catch (err) {
+      setError("Failed to get recommendations.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleNewSearch = () => {
@@ -130,13 +185,18 @@ try {
     setHasSearched(false);
   };
 
+  // Work out which DNA card message to show
+  // First card: hasn't shared yet → show unlock messaging
+  // Second card onwards: already shared → show friendly share message
+  const isFirstShareOpportunity = !hasShared && searchCount <= 1;
+
   // -------------------------
   // Render UI
   // -------------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1830] via-[#0a1830] to-[#18135a] -slate-300 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1830] via-[#0a1830] to-[#18135a] -slate-300 px-4 sm:px-8 pb-8 pt-12">
       {/* Top logo badge */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-10 mt-8">
         <div
           style={{ animation: "glowPulse 7s ease-in-out infinite" }}
           className="px-5 py-2 rounded-full border border-purple-400/60 text-purple-300 text-sm tracking-wide shadow-[0_0_18px_rgba(168,85,247,0.35)] bg-purple-900/10"
@@ -147,10 +207,10 @@ try {
 
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-10 px-4">
-          <h1 className="text-5xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
+          <h1 className="text-5xl sm:text-6xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
             Undercurrents
           </h1>
-          <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
             Discover hidden music gems tailored to your taste
           </p>
         </header>
@@ -227,6 +287,17 @@ try {
               />
             ))}
           </div>
+        )}
+
+        {recommendations.length > 0 && (
+          <ShareCard
+            artists={artists}
+            recommendations={recommendations}
+            obscurityScore={obscurityScore}
+            obscurityLabel={obscurityLabel}
+            isFirstShareOpportunity={isFirstShareOpportunity}
+            onShareComplete={handleShareUnlock}
+          />
         )}
       </div>
     </div>
