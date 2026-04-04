@@ -73,14 +73,12 @@ export default async function handler(
 
   // Filter out high-popularity artists (likely famous mismatches)
   // Obscure artists typically score below 50
-  const obscureResults = results.filter((a: any) => a.popularity < 50);
-
-  // Use first obscure result, or fall back to no image/link if none found
-  const result = obscureResults[0];
-
-  if (!result) {
-    return res.status(404).json({ error: "No sufficiently obscure artist found" });
-  }
+  const obscureResults = results.filter((a: any) => a.popularity < 75);
+// Use first obscure result, fall back to first result if none pass filter
+const result = obscureResults[0] || results[0];
+if (!result) {
+  return res.status(404).json({ error: "Artist not found" });
+}
 
   return res.status(200).json({
     spotifyUrl: result.external_urls.spotify,
