@@ -42,30 +42,36 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
     const geminiData = await geminiRes.json();
     const parsed = JSON.parse(geminiData.text.trim()) as RecommendationResponse;
 
-    const enrichedRecommendations = await Promise.all(
-      parsed.recommendations.map(async (rec) => {
-        try {
-          const spotifyRes = await fetch(
-  `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
+  const enrichedRecommendations = await Promise.all(
+  parsed.recommendations.map(async (rec) => {
+    try {
+      const spotifyRes = await fetch(
+        `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
+      );
+      if (!spotifyRes.ok) return null; // reject if Spotify can't find them
+      const spotifyData = await spotifyRes.json();
+      if (spotifyData.error) return null; // reject if no name match found
+      return {
+        ...rec,
+        spotifyUrl: spotifyData.spotifyUrl || null,
+        image: spotifyData.image || null,
+      };
+    } catch {
+      return null;
+    }
+  })
 );
-          if (!spotifyRes.ok) return rec;
-          const spotifyData = await spotifyRes.json();
-          return {
-            ...rec,
-            spotifyUrl: spotifyData.spotifyUrl || null,
-            image: spotifyData.image || null,
-          };
-        } catch {
-          return rec;
-        }
-      })
-    );
 
-    return {
-      recommendations: enrichedRecommendations,
-      obscurityScore: parsed.obscurityScore,
-      obscurityLabel: parsed.obscurityLabel,
-    };
+// Filter out any nulls (hallucinated or unverifiable artists)
+const verifiedRecommendations = enrichedRecommendations.filter(
+  (rec): rec is NonNullable<typeof rec> => rec !== null
+);
+
+return {
+  recommendations: verifiedRecommendations,
+  obscurityScore: parsed.obscurityScore,
+  obscurityLabel: parsed.obscurityLabel,
+};
   } catch (error) {
     console.error("Error fetching recommendations:", error);
     throw error;
