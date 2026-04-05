@@ -9,6 +9,8 @@ export interface Recommendation {
   description: string;
   whyYouWillLikeIt: string;
   obscurityLevel: number;
+  country?: string;
+  decade?: string;
   spotifyUrl?: string | null;
   image?: string | null;
 }

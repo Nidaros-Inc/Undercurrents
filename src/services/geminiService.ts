@@ -19,6 +19,8 @@ Respond ONLY with a valid JSON object in this exact format, no other text:
     {
       "name": "Artist Name",
       "genre": "Genre",
+      "country": "Country of origin",
+      "decade": "1980s",
       "description": "Short bio or style description",
       "whyYouWillLikeIt": "Why this matches the user's taste",
       "obscurityLevel": 8
@@ -43,7 +45,9 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
     const enrichedRecommendations = await Promise.all(
       parsed.recommendations.map(async (rec) => {
         try {
-          const spotifyRes = await fetch(`${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&genre=${encodeURIComponent(rec.genre)}`);
+          const spotifyRes = await fetch(
+  `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
+);
           if (!spotifyRes.ok) return rec;
           const spotifyData = await spotifyRes.json();
           return {

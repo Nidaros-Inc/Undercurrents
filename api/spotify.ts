@@ -42,7 +42,7 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { artist } = req.query;
+  const { artist, country, decade } = req.query;
 
   if (!artist) {
     return res.status(400).json({ error: "Artist name required" });
@@ -51,7 +51,7 @@ export default async function handler(
   const token = await getAccessToken();
 
   const response = await fetch(
-    `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=5`,
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=10`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,10 +66,51 @@ export default async function handler(
     return res.status(404).json({ error: "Artist not found" });
   }
 
-  // Prefer artists with popularity under 75 to avoid famous mismatches
-  // but always fall back to first result so something is returned
-  const preferredResult = results.find((a: any) => a.popularity < 75);
-  const result = preferredResult || results[0];
+  const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const targetName = normalize(artist as string);
+
+  // Filter to name matches only
+  const nameMatches = results.filter((a: any) => normalize(a.name) === targetName);
+
+  if (nameMatches.length === 0) {
+    return res.status(404).json({ error: "No matching artist found" });
+  }
+
+  if (nameMatches.length === 1) {
+    // Only one match — use it
+    return res.status(200).json({
+      spotifyUrl: nameMatches[0].external_urls.spotify,
+      image: nameMatches[0].images?.[0]?.url || null,
+    });
+  }
+
+  // Multiple matches with same name — use country/decade to pick best one
+  // Score each result based on how well it matches
+  const scored = nameMatches.map((a: any) => {
+    let score = 0;
+    const artistGenres: string[] = a.genres || [];
+
+    // Prefer lower popularity (more obscure)
+    if (a.popularity < 75) score += 2;
+    if (a.popularity < 50) score += 2;
+
+    // Boost if genres hint at correct decade
+    if (decade) {
+      const dec = (decade as string).replace('s', '');
+      if (artistGenres.some((g: string) => g.includes(dec))) score += 3;
+    }
+
+    // Boost if genres hint at country
+    if (country) {
+      const c = (country as string).toLowerCase();
+      if (artistGenres.some((g: string) => g.includes(c))) score += 3;
+    }
+
+    return { artist: a, score };
+  });
+
+  scored.sort((x: { artist: any; score: number }, y: { artist: any; score: number }) => y.score - x.score);
+  const result = scored[0].artist;
 
   return res.status(200).json({
     spotifyUrl: result.external_urls.spotify,
