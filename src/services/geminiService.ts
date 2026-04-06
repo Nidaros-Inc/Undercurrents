@@ -28,7 +28,7 @@ Respond ONLY with a valid JSON object in this exact format, no other text:
     }
   ]
 }
-Ensure obscurityLevel is mostly 7-10. Return exactly 5 recommendations.`;
+Ensure obscurityLevel is mostly 7-10. Return exactly 10 recommendations.`;
 
 export async function getRecommendations(seedArtists: Artist[]): Promise<RecommendationResponse> {
   const artistNames = seedArtists.map(a => a.name).join(", ");
@@ -64,9 +64,11 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
 );
 
 // Filter out any nulls (hallucinated or unverifiable artists)
-const verifiedRecommendations = enrichedRecommendations.filter(
-  (rec): rec is NonNullable<typeof rec> => rec !== null
-);
+// and any that have no Spotify link (ambiguous name matches)
+const verifiedRecommendations = enrichedRecommendations
+  .filter((rec): rec is NonNullable<typeof rec> => rec !== null)
+  .filter(rec => rec.spotifyUrl !== null)
+  .slice(0, 5);
 
 return {
   recommendations: verifiedRecommendations,
