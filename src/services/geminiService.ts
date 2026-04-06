@@ -9,6 +9,7 @@ const API_BASE =
 const PROMPT_TEMPLATE = (artistNames: string) => `I like the following music artists: ${artistNames}.
 Please suggest 5 music artists that are genuinely obscure, underground, or cult favourites — artists that most music fans will never have heard of. Avoid any artist that has had mainstream chart success, significant radio play, or widespread name recognition. Think deep cuts — artists with small but dedicated followings, released on independent labels, or known only within specific music communities.
 IMPORTANT: Only recommend artists that genuinely exist and have a real presence on Spotify. Do not invent, approximate, or hallucinate artist names. Every artist you recommend must be a real, verifiable musician or band that can be found by searching their exact name on Spotify.
+IMPORTANT: Do not recommend any artist whose name is shared with or could be confused with another artist on Spotify. Only recommend artists with unique, unambiguous names that will return the correct artist as the top result on Spotify.
 The suggestions should be stylistically related to my favorites but offer something unique and potentially undiscovered.
 Also generate an overall obscurityScore (40-98) representing how eclectic and obscure the user's taste is — scores should be generous and flattering, minimum 40, and reflect genuine musical adventurousness. Also generate a short obscurityLabel (e.g. "Deeply underground", "Cult connoisseur", "Hidden gem hunter").
 Respond ONLY with a valid JSON object in this exact format, no other text:

@@ -50,14 +50,8 @@ export default async function handler(
 
   const token = await getAccessToken();
 
-  // Build a richer search query using genre and decade to get better initial results
-const searchTerms = [artist as string];
-if (genre) searchTerms.push(genre as string);
-if (decade) searchTerms.push(decade as string);
-const searchQuery = searchTerms.join(' ');
-
 const response = await fetch(
-  `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=artist&limit=10`,
+  `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=10`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
