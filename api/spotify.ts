@@ -124,16 +124,6 @@ const scored = nameMatches.map((a: any) => {
 
 scored.sort((x: { artist: any; score: number }, y: { artist: any; score: number }) => y.score - x.score);
 
-const topScore = scored[0].score;
-const secondScore = scored.length > 1 ? scored[1].score : -999;
-
-// If scores are too close, we can't confidently distinguish — return no image/link
-if (scored.length > 1 && (topScore - secondScore) < 3) {
-  return res.status(200).json({
-    spotifyUrl: null,
-    image: null,
-  });
-}
 
 const result = scored[0].artist;
 

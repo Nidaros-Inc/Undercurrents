@@ -67,7 +67,6 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
 // and any that have no Spotify link (ambiguous name matches)
 const verifiedRecommendations = enrichedRecommendations
   .filter((rec): rec is NonNullable<typeof rec> => rec !== null)
-  .filter(rec => rec.spotifyUrl !== null)
   .slice(0, 5);
 
 return {
