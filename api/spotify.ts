@@ -86,28 +86,40 @@ export default async function handler(
 
   // Multiple matches with same name — use country/decade to pick best one
   // Score each result based on how well it matches
-  const scored = nameMatches.map((a: any) => {
-    let score = 0;
-    const artistGenres: string[] = a.genres || [];
+ const recommendedGenre = ((req.query.genre as string) || '').toLowerCase();
 
-    // Prefer lower popularity (more obscure)
-    if (a.popularity < 75) score += 2;
-    if (a.popularity < 50) score += 2;
+const scored = nameMatches.map((a: any) => {
+  let score = 0;
+  const artistGenres: string[] = a.genres || [];
 
-    // Boost if genres hint at correct decade
-    if (decade) {
-      const dec = (decade as string).replace('s', '');
-      if (artistGenres.some((g: string) => g.includes(dec))) score += 3;
-    }
+  // Prefer lower popularity
+  if (a.popularity < 75) score += 2;
+  if (a.popularity < 50) score += 2;
 
-    // Boost if genres hint at country
-    if (country) {
-      const c = (country as string).toLowerCase();
-      if (artistGenres.some((g: string) => g.includes(c))) score += 3;
-    }
+  // Boost if Spotify genres contain any words from the recommended genre
+  if (recommendedGenre) {
+    const genreWords = recommendedGenre.split(/[\s,\/]+/);
+    genreWords.forEach((word: string) => {
+      if (word.length > 3 && artistGenres.some((g: string) => g.toLowerCase().includes(word))) {
+        score += 3;
+      }
+    });
+  }
 
-    return { artist: a, score };
-  });
+  // Boost if genres hint at correct decade
+  if (decade) {
+    const dec = (decade as string).replace('s', '');
+    if (artistGenres.some((g: string) => g.includes(dec))) score += 3;
+  }
+
+  // Boost if genres hint at country
+  if (country) {
+    const c = (country as string).toLowerCase();
+    if (artistGenres.some((g: string) => g.includes(c))) score += 3;
+  }
+
+  return { artist: a, score };
+});
 
   scored.sort((x: { artist: any; score: number }, y: { artist: any; score: number }) => y.score - x.score);
   const result = scored[0].artist;
