@@ -42,7 +42,7 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { artist, country, decade } = req.query;
+  const { artist } = req.query;
 
   if (!artist) {
     return res.status(400).json({ error: "Artist name required" });
@@ -84,48 +84,61 @@ const response = await fetch(
     });
   }
 
-  // Multiple matches with same name — use country/decade to pick best one
-  // Score each result based on how well it matches
- const recommendedGenre = ((req.query.genre as string) || '').toLowerCase();
+  // Multiple matches with same name — try to find best match
+const recommendedGenre = ((req.query.genre as string) || '').toLowerCase();
+const recommendedDecade = ((req.query.decade as string) || '').toLowerCase();
+const recommendedCountry = ((req.query.country as string) || '').toLowerCase();
 
 const scored = nameMatches.map((a: any) => {
   let score = 0;
   const artistGenres: string[] = a.genres || [];
+  const genreString = artistGenres.join(' ').toLowerCase();
 
   // Prefer lower popularity
   if (a.popularity < 75) score += 2;
   if (a.popularity < 50) score += 2;
 
-  // Boost if Spotify genres contain any words from the recommended genre
+  // Boost if Spotify genres contain any words from recommended genre
   if (recommendedGenre) {
     const genreWords = recommendedGenre.split(/[\s,\/]+/);
     genreWords.forEach((word: string) => {
-      if (word.length > 3 && artistGenres.some((g: string) => g.toLowerCase().includes(word))) {
+      if (word.length > 3 && genreString.includes(word)) {
         score += 3;
       }
     });
   }
 
   // Boost if genres hint at correct decade
-  if (decade) {
-    const dec = (decade as string).replace('s', '');
-    if (artistGenres.some((g: string) => g.includes(dec))) score += 3;
+  if (recommendedDecade) {
+    const dec = recommendedDecade.replace('s', '');
+    if (genreString.includes(dec)) score += 3;
   }
 
   // Boost if genres hint at country
-  if (country) {
-    const c = (country as string).toLowerCase();
-    if (artistGenres.some((g: string) => g.includes(c))) score += 3;
+  if (recommendedCountry) {
+    if (genreString.includes(recommendedCountry)) score += 3;
   }
 
   return { artist: a, score };
 });
 
-  scored.sort((x: { artist: any; score: number }, y: { artist: any; score: number }) => y.score - x.score);
-  const result = scored[0].artist;
+scored.sort((x: { artist: any; score: number }, y: { artist: any; score: number }) => y.score - x.score);
 
+const topScore = scored[0].score;
+const secondScore = scored.length > 1 ? scored[1].score : -999;
+
+// If scores are too close, we can't confidently distinguish — return no image/link
+if (scored.length > 1 && (topScore - secondScore) < 3) {
   return res.status(200).json({
-    spotifyUrl: result.external_urls.spotify,
-    image: result.images?.[0]?.url || null,
+    spotifyUrl: null,
+    image: null,
   });
+}
+
+const result = scored[0].artist;
+
+return res.status(200).json({
+  spotifyUrl: result.external_urls.spotify,
+  image: result.images?.[0]?.url || null,
+});
 }
