@@ -58,7 +58,7 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
       if (spotifyData.spotifyId) {
         try {
           const tracksRes = await fetch(
-            `${API_BASE}/api/tracks?artistId=${spotifyData.spotifyId}`
+            `${API_BASE}/api/track?artistId=${spotifyData.spotifyId}`
           );
           if (tracksRes.ok) {
             const tracksData = await tracksRes.json();
