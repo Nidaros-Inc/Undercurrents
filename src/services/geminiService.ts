@@ -43,19 +43,38 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
     const geminiData = await geminiRes.json();
     const parsed = JSON.parse(geminiData.text.trim()) as RecommendationResponse;
 
-  const enrichedRecommendations = await Promise.all(
+ const enrichedRecommendations = await Promise.all(
   parsed.recommendations.map(async (rec) => {
     try {
       const spotifyRes = await fetch(
-        `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
+        `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&genre=${encodeURIComponent(rec.genre || '')}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
       );
-      if (!spotifyRes.ok) return null; // reject if Spotify can't find them
+      if (!spotifyRes.ok) return null;
       const spotifyData = await spotifyRes.json();
-      if (spotifyData.error) return null; // reject if no name match found
+      if (spotifyData.error) return null;
+
+      // Fetch top tracks if we have a Spotify ID
+      let tracks: any[] = [];
+      if (spotifyData.spotifyId) {
+        try {
+          const tracksRes = await fetch(
+            `${API_BASE}/api/tracks?artistId=${spotifyData.spotifyId}`
+          );
+          if (tracksRes.ok) {
+            const tracksData = await tracksRes.json();
+            tracks = tracksData.tracks || [];
+          }
+        } catch {
+          tracks = [];
+        }
+      }
+
       return {
         ...rec,
         spotifyUrl: spotifyData.spotifyUrl || null,
+        spotifyId: spotifyData.spotifyId || null,
         image: spotifyData.image || null,
+        tracks,
       };
     } catch {
       return null;

@@ -5,6 +5,7 @@ import RecommendationCard from './components/RecommendationCard';
 import { getRecommendations } from './services/geminiService';
 import type { Artist, Recommendation } from './types';
 import ShareCard from './components/ShareCard';
+import PlaylistCard from './components/PlaylistCard';
 
 function App() {
   const [artists, setArtists] = useState<Artist[]>([]);
@@ -288,7 +289,9 @@ function App() {
             ))}
           </div>
         )}
-
+{recommendations.length > 0 && (
+          <PlaylistCard recommendations={recommendations} />
+        )}
         {recommendations.length > 0 && (
           <ShareCard
             artists={artists}

@@ -78,10 +78,11 @@ const response = await fetch(
 
   if (nameMatches.length === 1) {
     // Only one match — use it
-    return res.status(200).json({
-      spotifyUrl: nameMatches[0].external_urls.spotify,
-      image: nameMatches[0].images?.[0]?.url || null,
-    });
+   return res.status(200).json({
+  spotifyUrl: nameMatches[0].external_urls.spotify,
+  spotifyId: nameMatches[0].id,
+  image: nameMatches[0].images?.[0]?.url || null,
+});
   }
 
   // Multiple matches with same name — try to find best match
@@ -129,6 +130,7 @@ const result = scored[0].artist;
 
 return res.status(200).json({
   spotifyUrl: result.external_urls.spotify,
+  spotifyId: result.id,
   image: result.images?.[0]?.url || null,
 });
 }
