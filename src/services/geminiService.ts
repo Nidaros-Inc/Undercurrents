@@ -53,32 +53,10 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
       const spotifyData = await spotifyRes.json();
       if (spotifyData.error) return null;
 
-     // Fetch top tracks if we have a Spotify ID
-      let tracks: any[] = [];
-      console.log('spotifyId:', spotifyData.spotifyId);
-      if (spotifyData.spotifyId) {
-        try {
-          const tracksRes = await fetch(
-            `${API_BASE}/api/track?artistId=${spotifyData.spotifyId}`
-          );
-          console.log('tracksRes status:', tracksRes.status);
-          if (tracksRes.ok) {
-            const tracksData = await tracksRes.json();
-            console.log('tracksData:', JSON.stringify(tracksData));
-            tracks = tracksData.tracks || [];
-          }
-        } catch (e) {
-          console.log('tracks fetch error:', e);
-          tracks = [];
-        }
-      }
-
-      return {
+return {
         ...rec,
         spotifyUrl: spotifyData.spotifyUrl || null,
-        spotifyId: spotifyData.spotifyId || null,
         image: spotifyData.image || null,
-        tracks,
       };
     } catch {
       return null;
