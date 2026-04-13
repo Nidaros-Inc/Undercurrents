@@ -9,7 +9,7 @@ interface Props {
 export default function HistoryView({ history, onClose, onClearHistory }: Props) {
   return (
     <div className="fixed inset-0 z-50 bg-[#0a1830] overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 pt-12 pb-8">
+      <div className="max-w-4xl mx-auto px-4 pt-12 pb-24">
         <div className="flex items-center justify-between mb-8">
           <button onClick={onClose} className="text-slate-400 hover:text-white text-sm">
             Back
