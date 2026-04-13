@@ -56,7 +56,7 @@ const ShareCard: React.FC<ShareCardProps> = ({
         <div className="flex justify-between items-start mb-5">
           <div>
             <h3 className="text-2xl font-extrabold text-white tracking-tight">
-              Undercurrents App
+              Undercurrents
             </h3>
             <p className="text-slate-400 text-xs mt-1">Your music DNA</p>
           </div>
@@ -143,7 +143,7 @@ const ShareCard: React.FC<ShareCardProps> = ({
         {/* Footer */}
         <div className="mt-5 pt-4 border-t border-slate-700/40 text-center">
           <p className="text-slate-600 text-[9px] uppercase tracking-widest">
-            Undercurrents · Nidaros Inc · Discover your sound
+            Undercurrents App · Nidaros Inc · Discover your sound
           </p>
         </div>
       </div>
