@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import ArtistInput from './components/ArtistInput';
 import RecommendationCard from './components/RecommendationCard';
 import { getRecommendations } from './services/geminiService';
-import type { Artist, Recommendation } from './types';
+import type { Artist, Recommendation, SavedSearch } from './types';
 import ShareCard from './components/ShareCard';
+import HistoryView from './components/HistoryView';
+
 
 
 function App() {
@@ -19,6 +21,11 @@ function App() {
   const [unlockProduct, setUnlockProduct] = useState<any>(null);
   const [searchCount, setSearchCount] = useState<number>(0);
   const [hasShared, setHasShared] = useState<boolean>(false);
+  const [showHistory, setShowHistory] = useState(false);
+const [searchHistory, setSearchHistory] = useState<SavedSearch[]>(() => {
+  const saved = localStorage.getItem('searchHistory');
+  return saved ? JSON.parse(saved) : [];
+});
   const MAX_ARTISTS = 8;
 
   // -------------------------
@@ -165,6 +172,17 @@ function App() {
       setObscurityScore(response.obscurityScore);
       setObscurityLabel(response.obscurityLabel);
       setHasSearched(true);
+      const newEntry: SavedSearch = {
+  id: crypto.randomUUID(),
+  date: new Date().toISOString(),
+  artists: [...artists],
+  recommendations: response.recommendations,
+  obscurityScore: response.obscurityScore,
+  obscurityLabel: response.obscurityLabel,
+};
+const updatedHistory = [newEntry, ...searchHistory].slice(0, 20);
+setSearchHistory(updatedHistory);
+localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
 
       if (!isPremium) {
         const newCount = searchCount + 1;
@@ -197,14 +215,33 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a1830] via-[#0a1830] to-[#18135a] -slate-300 px-4 sm:px-8 pb-8 pt-12">
       {/* Top logo badge */}
-      <div className="flex justify-center mb-10 mt-8">
-        <div
-          style={{ animation: "glowPulse 7s ease-in-out infinite" }}
-          className="px-5 py-2 rounded-full border border-purple-400/60 text-purple-300 text-sm tracking-wide shadow-[0_0_18px_rgba(168,85,247,0.35)] bg-purple-900/10"
-        >
-          Music Discovery From Nidaros
-        </div>
-      </div>
+      <div className="flex justify-center mb-10 mt-8 relative">
+  <div
+    style={{ animation: "glowPulse 7s ease-in-out infinite" }}
+    className="px-5 py-2 rounded-full border border-purple-400/60 text-purple-300 text-sm tracking-wide shadow-[0_0_18px_rgba(168,85,247,0.35)] bg-purple-900/10"
+  >
+    Music Discovery From Nidaros
+  </div>
+  <button
+    onClick={() => setShowHistory(true)}
+    style={{ animation: "glowPulse 7s ease-in-out infinite" }}
+    className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full border border-purple-400/60 text-purple-300 shadow-[0_0_18px_rgba(168,85,247,0.35)] bg-purple-900/10 flex items-center justify-center hover:bg-purple-900/30 transition-all"
+    title="Search History"
+  >
+    ⏱
+  </button>
+</div>
+
+{showHistory && (
+  <HistoryView
+    history={searchHistory}
+    onClose={() => setShowHistory(false)}
+    onClearHistory={() => {
+      setSearchHistory([]);
+      localStorage.removeItem('searchHistory');
+    }}
+  />
+)}
 
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-10 px-4">
