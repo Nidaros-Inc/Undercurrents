@@ -143,7 +143,7 @@ const ShareCard: React.FC<ShareCardProps> = ({
         {/* Footer */}
         <div className="mt-5 pt-4 border-t border-slate-700/40 text-center">
           <p className="text-slate-600 text-[9px] uppercase tracking-widest">
-            Undercurrents App · Nidaros Inc · Discover your sound
+            Undercurrents · Nidaros Inc · Discover your sound
           </p>
         </div>
       </div>

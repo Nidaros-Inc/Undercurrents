@@ -85,52 +85,11 @@ const response = await fetch(
 });
   }
 
-  // Multiple matches with same name — try to find best match
-const recommendedGenre = ((req.query.genre as string) || '').toLowerCase();
-const recommendedDecade = ((req.query.decade as string) || '').toLowerCase();
-const recommendedCountry = ((req.query.country as string) || '').toLowerCase();
-
-const scored = nameMatches.map((a: any) => {
-  let score = 0;
-  const artistGenres: string[] = a.genres || [];
-  const genreString = artistGenres.join(' ').toLowerCase();
-
-  // Prefer lower popularity
-  if (a.popularity < 75) score += 2;
-  if (a.popularity < 50) score += 2;
-
-  // Boost if Spotify genres contain any words from recommended genre
-  if (recommendedGenre) {
-    const genreWords = recommendedGenre.split(/[\s,\/]+/);
-    genreWords.forEach((word: string) => {
-      if (word.length > 3 && genreString.includes(word)) {
-        score += 3;
-      }
-    });
-  }
-
-  // Boost if genres hint at correct decade
-  if (recommendedDecade) {
-    const dec = recommendedDecade.replace('s', '');
-    if (genreString.includes(dec)) score += 3;
-  }
-
-  // Boost if genres hint at country
-  if (recommendedCountry) {
-    if (genreString.includes(recommendedCountry)) score += 3;
-  }
-
-  return { artist: a, score };
-});
-
-scored.sort((x: { artist: any; score: number }, y: { artist: any; score: number }) => y.score - x.score);
-
-
-const result = scored[0].artist;
-
+// Multiple exact name matches — ambiguous, return search URL to avoid wrong artist
+const searchUrl = `https://open.spotify.com/search/${encodeURIComponent(artist as string)}`;
 return res.status(200).json({
-  spotifyUrl: result.external_urls.spotify,
-  spotifyId: result.id,
-  image: result.images?.[0]?.url || null,
+  spotifyUrl: searchUrl,
+  spotifyId: null,
+  image: null,
 });
 }
