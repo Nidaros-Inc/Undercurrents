@@ -21,9 +21,6 @@ export default async function handler(req: any, res: any) {
  const response = await ai.models.generateContent({
   model: "gemini-2.5-flash",
   contents: prompt,
-  config: {
-    maxOutputTokens: 8000,
-  },
 });
 
     let text = response.text || "";
