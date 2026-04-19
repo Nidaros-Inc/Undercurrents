@@ -45,7 +45,7 @@ export default async function handler(
   // Search by artist name only — no genre/country enrichment
   // This ensures ambiguity check is clean and not masked by extra search terms
   const response = await fetch(
-    `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=10`,
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=20`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

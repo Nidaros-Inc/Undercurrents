@@ -43,8 +43,9 @@ export async function getRecommendations(seedArtists: Artist[]): Promise<Recomme
     const geminiData = await geminiRes.json();
     const parsed = JSON.parse(geminiData.text.trim()) as RecommendationResponse;
 
- const enrichedRecommendations = await Promise.all(
-  parsed.recommendations.map(async (rec) => {
+ const enrichedRecommendations = [];
+for (const rec of parsed.recommendations) {
+  const result = await (async () => {
     try {
       const spotifyRes = await fetch(
         `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&genre=${encodeURIComponent(rec.genre || '')}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
@@ -61,8 +62,9 @@ return {
     } catch {
       return null;
     }
-  })
-);
+ })();
+  enrichedRecommendations.push(result);
+}
 
 // Filter out any nulls (hallucinated or unverifiable artists)
 // and any that have no Spotify link (ambiguous name matches)
