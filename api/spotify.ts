@@ -40,19 +40,12 @@ export default async function handler(
   if (!artist) {
     return res.status(400).json({ error: "Artist name required" });
   }
-
-  const recommendedGenre = ((req.query.genre as string) || '').toLowerCase();
-  const recommendedCountry = ((req.query.country as string) || '').toLowerCase();
-
   const token = await getAccessToken();
 
-  // Build a specific search query using genre and country to help disambiguation
-  const searchQuery = [artist, recommendedGenre, recommendedCountry]
-    .filter(Boolean)
-    .join(' ');
-
+  // Search by artist name only — no genre/country enrichment
+  // This ensures ambiguity check is clean and not masked by extra search terms
   const response = await fetch(
-    `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=artist&limit=10`,
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=10`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -76,7 +69,8 @@ export default async function handler(
     return res.status(404).json({ error: "No matching artist found" });
   }
 
-if (nameMatches.length === 1) {
+  if (nameMatches.length === 1) {
+    // Only one artist with this name — safe to use
     return res.status(200).json({
       spotifyUrl: nameMatches[0].external_urls.spotify,
       spotifyId: nameMatches[0].id,
@@ -84,6 +78,6 @@ if (nameMatches.length === 1) {
     });
   }
 
-  // Multiple exact name matches — ambiguous, discard entirely
+  // Multiple exact name matches — ambiguous, discard to protect credibility
   return res.status(404).json({ error: "Ambiguous artist name" });
 }
