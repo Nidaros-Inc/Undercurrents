@@ -18,10 +18,13 @@ export default async function handler(req: any, res: any) {
       apiKey: process.env.GEMINI_API_KEY!,
     });
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+ const response = await ai.models.generateContent({
+  model: "gemini-2.5-flash",
+  contents: prompt,
+  config: {
+    maxOutputTokens: 8000,
+  },
+});
 
     let text = response.text || "";
 text = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
