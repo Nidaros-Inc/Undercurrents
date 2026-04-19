@@ -76,10 +76,14 @@ export default async function handler(
     return res.status(404).json({ error: "No matching artist found" });
   }
 
-  // With the more specific search query, the first exact match should be the right one
-  return res.status(200).json({
-    spotifyUrl: nameMatches[0].external_urls.spotify,
-    spotifyId: nameMatches[0].id,
-    image: nameMatches[0].images?.[0]?.url || null,
-  });
+if (nameMatches.length === 1) {
+    return res.status(200).json({
+      spotifyUrl: nameMatches[0].external_urls.spotify,
+      spotifyId: nameMatches[0].id,
+      image: nameMatches[0].images?.[0]?.url || null,
+    });
+  }
+
+  // Multiple exact name matches — ambiguous, discard entirely
+  return res.status(404).json({ error: "Ambiguous artist name" });
 }

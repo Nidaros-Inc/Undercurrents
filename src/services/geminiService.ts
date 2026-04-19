@@ -28,7 +28,7 @@ Respond ONLY with a valid JSON object in this exact format, no other text:
     }
   ]
 }
-Ensure obscurityLevel is mostly 7-10. Return exactly 10 recommendations.`;
+Ensure obscurityLevel is mostly 7-10. Return exactly 20 recommendations.`;
 
 export async function getRecommendations(seedArtists: Artist[]): Promise<RecommendationResponse> {
   const artistNames = seedArtists.map(a => a.name).join(", ");
