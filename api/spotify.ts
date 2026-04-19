@@ -1,8 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-
 let accessToken: string | null = null;
 let tokenExpires = 0;
-
 async function getAccessToken() {
   if (accessToken && Date.now() < tokenExpires) {
     return accessToken;
@@ -25,7 +23,6 @@ async function getAccessToken() {
   tokenExpires = Date.now() + data.expires_in * 1000;
   return accessToken;
 }
-
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -33,32 +30,35 @@ export default async function handler(
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
-
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
   const { artist } = req.query;
-
   if (!artist) {
     return res.status(400).json({ error: "Artist name required" });
   }
 
+  const recommendedGenre = ((req.query.genre as string) || '').toLowerCase();
+  const recommendedCountry = ((req.query.country as string) || '').toLowerCase();
+
   const token = await getAccessToken();
 
-const response = await fetch(
-  `https://api.spotify.com/v1/search?q=${encodeURIComponent(artist as string)}&type=artist&limit=10`,
+  // Build a specific search query using genre and country to help disambiguation
+  const searchQuery = [artist, recommendedGenre, recommendedCountry]
+    .filter(Boolean)
+    .join(' ');
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=artist&limit=10`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
   );
-
   const data = await response.json();
   const results = data.artists?.items;
 
@@ -69,27 +69,17 @@ const response = await fetch(
   const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
   const targetName = normalize(artist as string);
 
-  // Filter to name matches only
+  // Filter to exact name matches only
   const nameMatches = results.filter((a: any) => normalize(a.name) === targetName);
 
   if (nameMatches.length === 0) {
     return res.status(404).json({ error: "No matching artist found" });
   }
 
-  if (nameMatches.length === 1) {
-    // Only one match — use it
-   return res.status(200).json({
-  spotifyUrl: nameMatches[0].external_urls.spotify,
-  spotifyId: nameMatches[0].id,
-  image: nameMatches[0].images?.[0]?.url || null,
-});
-  }
-
-// Multiple exact name matches — ambiguous, return search URL to avoid wrong artist
-const searchUrl = `https://open.spotify.com/search/${encodeURIComponent(artist as string)}`;
-return res.status(200).json({
-  spotifyUrl: searchUrl,
-  spotifyId: null,
-  image: null,
-});
+  // With the more specific search query, the first exact match should be the right one
+  return res.status(200).json({
+    spotifyUrl: nameMatches[0].external_urls.spotify,
+    spotifyId: nameMatches[0].id,
+    image: nameMatches[0].images?.[0]?.url || null,
+  });
 }
