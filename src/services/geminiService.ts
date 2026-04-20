@@ -33,64 +33,50 @@ Ensure obscurityLevel is mostly 7-10. Return exactly 10 recommendations.`;
 export async function getRecommendations(seedArtists: Artist[]): Promise<RecommendationResponse> {
   const artistNames = seedArtists.map(a => a.name).join(", ");
   try {
-  const geminiRes = await fetch(`${API_BASE}/api/gemini`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt: PROMPT_TEMPLATE(artistNames) }),
-  });
-  if (!geminiRes.ok) throw new Error("Gemini backend call failed");
-  const geminiData = await geminiRes.json();
-  console.log('Gemini response length:', geminiData.text?.length);
-  console.log('Gemini response preview:', geminiData.text?.substring(0, 200));
-  
-  let parsedText = geminiData.text.trim();
-  let parsed;
-  try {
-    parsed = JSON.parse(parsedText) as RecommendationResponse;
-  } catch (parseError) {
-    console.log('JSON parse error:', parseError);
-    console.log('Last 200 chars:', parsedText.substring(parsedText.length - 200));
-    throw new Error('Failed to parse Gemini response as JSON');
+    const geminiRes = await fetch(`${API_BASE}/api/gemini`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: PROMPT_TEMPLATE(artistNames) }),
+    });
+
+    if (!geminiRes.ok) throw new Error("Gemini backend call failed");
+    const geminiData = await geminiRes.json();
+    const parsed = JSON.parse(geminiData.text.trim()) as RecommendationResponse;
+
+ const enrichedRecommendations = await Promise.all(
+  parsed.recommendations.map(async (rec) => {
+    try {
+      const spotifyRes = await fetch(
+        `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}&genre=${encodeURIComponent(rec.genre || '')}&country=${encodeURIComponent(rec.country || '')}&decade=${encodeURIComponent(rec.decade || '')}`
+      );
+      if (!spotifyRes.ok) return null;
+      const spotifyData = await spotifyRes.json();
+      if (spotifyData.error) return null;
+
+return {
+        ...rec,
+        spotifyUrl: spotifyData.spotifyUrl || null,
+        image: spotifyData.image || null,
+      };
+    } catch {
+      return null;
+    }
+  })
+);
+
+// Filter out any nulls (hallucinated or unverifiable artists)
+// and any that have no Spotify link (ambiguous name matches)
+const verifiedRecommendations = enrichedRecommendations
+  .filter((rec): rec is NonNullable<typeof rec> => rec !== null)
+  .slice(0, 5);
+
+return {
+  recommendations: verifiedRecommendations,
+  obscurityScore: parsed.obscurityScore,
+  obscurityLabel: parsed.obscurityLabel,
+};
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    throw error;
   }
-  
-  console.log('Number of recommendations from Gemini:', parsed.recommendations?.length);
-  
-  const enrichedRecommendations = await Promise.all(
-    parsed.recommendations.map(async (rec) => {
-      try {
-        const spotifyRes = await fetch(
-          `${API_BASE}/api/spotify?artist=${encodeURIComponent(rec.name)}`
-        );
-        console.log(`Spotify check for ${rec.name}: ${spotifyRes.status}`);
-        if (!spotifyRes.ok) return null;
-        const spotifyData = await spotifyRes.json();
-        if (spotifyData.error) return null;
-        return {
-          ...rec,
-          spotifyUrl: spotifyData.spotifyUrl || null,
-          image: spotifyData.image || null,
-        };
-      } catch {
-        return null;
-      }
-    })
-  );
-
-  console.log('Verified count before slice:', enrichedRecommendations.filter(r => r !== null).length);
-
-  const verifiedRecommendations = enrichedRecommendations
-    .filter((rec): rec is NonNullable<typeof rec> => rec !== null)
-    .slice(0, 5);
-
-  console.log('Final recommendations count:', verifiedRecommendations.length);
-
-  return {
-    recommendations: verifiedRecommendations,
-    obscurityScore: parsed.obscurityScore,
-    obscurityLabel: parsed.obscurityLabel,
-  };
-} catch (error) {
-  console.error("Error fetching recommendations:", error);
-  throw error;
-}
 }
